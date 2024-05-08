@@ -1,4 +1,5 @@
 const Job = require('../models/jobModel');
+const jwt = require('jsonwebtoken');
 
 exports.createJob = async (req, res) => {
     try {
@@ -21,7 +22,11 @@ exports.getAllJobs = async (req, res) => {
 
 exports.getJobsByEmail = async (req, res) => {
     try {
+        const tokenEmail = req.user.email
         const { email } = req.params;
+        if(tokenEmail !== email){
+            return res.status(400).send({message: 'token email mismatch'})
+        }
         const jobs = await Job.find({ 'buyer.email': email });
         if (!jobs || jobs.length === 0) {
             res.status(404).json({ message: 'No jobs found for this email' });

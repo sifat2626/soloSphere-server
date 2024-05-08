@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jobController = require('../controllers/jobController');
+const {verifyToken} = require("../middlewares/authMiddleware");
 
 // Create a new job
 router.post('/jobs', jobController.createJob);
@@ -11,7 +12,7 @@ router.get('/jobs', jobController.getAllJobs);
 router.get('/jobs/byId/:id', jobController.getJobById);
 
 // Get a single job by email
-router.get('/jobs/:email', jobController.getJobsByEmail);
+router.get('/jobs/:email', verifyToken, jobController.getJobsByEmail);
 
 // Update a job
 router.patch('/jobs/:id', jobController.updateJob);
